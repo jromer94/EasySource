@@ -1,5 +1,6 @@
 var request = require('request');
 var async = require('async');
+var prompt = require('prompt');
 
 function getRepos(pageNum, callback) {
   var options = {
@@ -60,6 +61,10 @@ function isIssueEasy(issue, callback){
 //}
 
 results = [];
+
+prompt.start();
+
+prompt.get(['language'], function (err, result) {
 async.each([1,2,3,4], function(i , callback) {
   getRepos(i, function(repos) {
     async.each(repos, function(repo, callback){
@@ -86,4 +91,5 @@ async.each([1,2,3,4], function(i , callback) {
     console.log(results[i].title);   
     console.log("");
   }
+});
 });
