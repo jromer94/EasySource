@@ -41,7 +41,7 @@ function isIssueEasy(issue, callback){
   var labels = issue.labels;
   var easy = false;
   for(var i = 0; i < labels.length; i++) {
-    if(labels[i].name === 'bug') {
+    if(labels[i].name === 'easy') {
       easy = true;
     }
   }
@@ -63,9 +63,9 @@ function isIssueEasy(issue, callback){
 results = [];
 
 prompt.start();
-
+console.log("Enter Language to search");
 prompt.get(['language'], function (err, result) {
-  async.each([1,2,3,4], function(i , callback) {
+  async.each([1,2,3,4,5,6,7,8,9,10], function(i , callback) {
     getRepos(i, result.language, function(repos) {
       async.each(repos, function(repo, callback){
         getIssues(repo, function(issues){
