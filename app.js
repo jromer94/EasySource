@@ -4,7 +4,7 @@ var prompt = require('prompt');
 
 function getRepos(pageNum, language, callback) {
   var options = {
-    url: 'https://api.github.com/search/repositories?q=language:'+ language + '&sort=stars&order=desc&page='+ pageNum + '&client_id=4ed42df05d18938798f3&client_secret=e2d8403260f9a518d4b2d05b241ffe4162fd50f4',
+    url: 'https://api.github.com/search/repositories?q=language:'+ language + '&sort=stars&order=desc&page='+ pageNum + '&client_id=4ed42df05d18938798f3&client_secret=e2d8403260f9a518d4b2d05b241ffe4162fd50f4&per_page=100',
     headers: {
       'User-Agent': 'jromer94'
     } 
@@ -88,8 +88,8 @@ prompt.get(['language'], function (err, result) {
     });
   }, function(err) {
     for(var i = 0; i < results.length; i++){
-      console.log(results[i].title);   
-      console.log("");
+      console.log('\n' + results[i].title);   
+      console.log(results[i].html_url);
     }
   });
 });
