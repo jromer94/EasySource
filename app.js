@@ -1,4 +1,5 @@
-request = require('request');
+var request = require('request');
+var async = require('async');
 
 function getRepos(pageNum, callback) {
   var options = {
@@ -37,20 +38,52 @@ function getIssues(repo, callback) {
 
 function isIssueEasy(issue, callback){
   var labels = issue.labels;
+  var easy = false;
   for(var i = 0; i < labels.length; i++) {
-    if(labels[i].name === 'easy') {
-      console.log(issue.url);
+    if(labels[i].name === 'bug') {
+      easy = true;
     }
   }
+  callback(easy);
 }
-for(var i = 0; i < 10; i++){
-  getRepos(i, function (repos){
-    for(var i = 0; i < repos.length; i++){
-      getIssues(repos[i], function(issues){
-        for(var i = 0; i < issues.length; i++) {
-          isIssueEasy(issues[i]);
-        }
+
+//for(var i = 0; i < 10; i++){
+//  getRepos(i, function (repos){
+//    for(var i = 0; i < repos.length; i++){
+//      getIssues(repos[i], function(issues){
+//        for(var i = 0; i < issues.length; i++) {
+//          isIssueEasy(issues[i]);
+//        }
+//      });
+//    }
+//  });
+//}
+
+results = [];
+async.each([1,2,3,4], function(i , callback) {
+  getRepos(i, function(repos) {
+    async.each(repos, function(repo, callback){
+      getIssues(repo, function(issues){
+        async.each(issues, function(issue, callback){
+          isIssueEasy(issue, function(easy){
+
+            if(easy){
+              results.push(issue); 
+            }
+
+            callback(); 
+          }); 
+        }, function(err){
+          callback();
+        });
       });
-    }
+    }, function(err){
+      callback();
+    });
   });
-}
+}, function(err) {
+  for(var i = 0; i < results.length; i++){
+    console.log(results[i].title);   
+    console.log("");
+  }
+});
