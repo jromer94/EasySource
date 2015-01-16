@@ -65,31 +65,31 @@ results = [];
 prompt.start();
 
 prompt.get(['language'], function (err, result) {
-async.each([1,2,3,4], function(i , callback) {
-  getRepos(i, function(repos) {
-    async.each(repos, function(repo, callback){
-      getIssues(repo, function(issues){
-        async.each(issues, function(issue, callback){
-          isIssueEasy(issue, function(easy){
+  async.each([1,2,3,4], function(i , callback) {
+    getRepos(i, function(repos) {
+      async.each(repos, function(repo, callback){
+        getIssues(repo, function(issues){
+          async.each(issues, function(issue, callback){
+            isIssueEasy(issue, function(easy){
 
-            if(easy){
-              results.push(issue); 
-            }
+              if(easy){
+                results.push(issue); 
+              }
 
-            callback(); 
-          }); 
-        }, function(err){
-          callback();
+              callback(); 
+            }); 
+          }, function(err){
+            callback();
+          });
         });
+      }, function(err){
+        callback();
       });
-    }, function(err){
-      callback();
     });
+  }, function(err) {
+    for(var i = 0; i < results.length; i++){
+      console.log(results[i].title);   
+      console.log("");
+    }
   });
-}, function(err) {
-  for(var i = 0; i < results.length; i++){
-    console.log(results[i].title);   
-    console.log("");
-  }
-});
 });
