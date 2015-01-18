@@ -84,7 +84,7 @@ prompt.get(['language'], function (err, result) {
       });
     });
   }, function(err) {
-    console.log("Searched " + repoCount + "repos"
+    console.log("Searched " + repoCount + "repos");
     for(var i = 0; i < results.length; i++){
       var title = results[i].url.replace("https://api.github.com/repos/", "");
       title = '\n' + title.replace( /\/issues.*/g, "");
