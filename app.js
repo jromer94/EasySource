@@ -44,9 +44,9 @@ function isIssueEasy(issue, callback){
     if(labels[i].name === 'easy') {
       easy = true;
     }
-    if(issue.body && issue.body.search("array out of bound") != -1){
+  }
+  if(issue.body && issue.body.search("array out of bound") != -1){
       easy = true;
-    }
   }
   callback(easy);
 }
