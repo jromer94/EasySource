@@ -52,6 +52,7 @@ function isIssueEasy(issue, callback){
 }
 
 results = [];
+RepoCount = 0;
 
 prompt.start();
 console.log("Enter Language to search");
@@ -60,6 +61,7 @@ prompt.get(['language'], function (err, result) {
     getRepos(i, result.language, function(repos) {
       async.each(repos, function(repo, callback){
         if(repo.open_issues_count > 0){
+          RepoCount++;
           getIssues(repo, function(issues){
             async.each(issues, function(issue, callback){
               isIssueEasy(issue, function(easy){
@@ -82,6 +84,7 @@ prompt.get(['language'], function (err, result) {
       });
     });
   }, function(err) {
+    console.log("Searched " + repoCount + "repos"
     for(var i = 0; i < results.length; i++){
       var title = results[i].url.replace("https://api.github.com/repos/", "");
       title = '\n' + title.replace( /\/issues.*/g, "");
