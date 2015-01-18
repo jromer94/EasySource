@@ -44,21 +44,12 @@ function isIssueEasy(issue, callback){
     if(labels[i].name === 'easy') {
       easy = true;
     }
+    if(issue.body && issue.body.search("array out of bound") != -1){
+      easy = true;
+    }
   }
   callback(easy);
 }
-
-//for(var i = 0; i < 10; i++){
-//  getRepos(i, function (repos){
-//    for(var i = 0; i < repos.length; i++){
-//      getIssues(repos[i], function(issues){
-//        for(var i = 0; i < issues.length; i++) {
-//          isIssueEasy(issues[i]);
-//        }
-//      });
-//    }
-//  });
-//}
 
 results = [];
 
@@ -88,7 +79,10 @@ prompt.get(['language'], function (err, result) {
     });
   }, function(err) {
     for(var i = 0; i < results.length; i++){
-      console.log('\n' + results[i].title);   
+      var title = results[i].url.replace("https://api.github.com/repos/", "");
+      title = '\n' + title.replace( /\/issues.*/g, "");
+      console.log(title); 
+      console.log(results[i].title);   
       console.log(results[i].html_url);
     }
   });
