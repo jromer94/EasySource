@@ -38,21 +38,28 @@ function getIssues(repo, callback) {
 }
 
 function isIssueEasy(issue, callback){
-  var labels = issue.labels;
-  var easy = false;
-  for(var i = 0; i < labels.length; i++) {
-    if(labels[i].name === 'easy') {
-      easy = true;
-    }
-  }
-  if(issue.body && issue.body.search("array out of bound") != -1){
-      easy = true;
+    var labels = issue.labels;
+    var easy = false;
+    if(issue.html_url.search('/pull/') == -1){
+      for(var i = 0; i < labels.length; i++) {
+        if(labels[i].name === 'easy') {
+         //easy = true;
+        }
+      }
+       if(issue.body && (issue.body.search("typo") != -1 || issue.title.search("typo") != -1)){
+        easy = true;
+      }
+    
+      if(issue.body && (issue.body.search("out of bound") != -1 || issue.title.search("out of bound") != -1)){
+        easy = true;
+      }
   }
   callback(easy);
 }
 
 results = [];
-RepoCount = 0;
+repoCount = 0;
+issueCount = 0;
 
 prompt.start();
 console.log("Enter Language to search");
@@ -61,9 +68,10 @@ prompt.get(['language'], function (err, result) {
     getRepos(i, result.language, function(repos) {
       async.each(repos, function(repo, callback){
         if(repo.open_issues_count > 0){
-          RepoCount++;
+          repoCount++;
           getIssues(repo, function(issues){
             async.each(issues, function(issue, callback){
+              issueCount++;
               isIssueEasy(issue, function(easy){
 
                 if(easy){
@@ -84,7 +92,7 @@ prompt.get(['language'], function (err, result) {
       });
     });
   }, function(err) {
-    console.log("Searched " + repoCount + "repos");
+    console.log("\nSearched "+ issueCount + " issues from " + repoCount + " repos");
     for(var i = 0; i < results.length; i++){
       var title = results[i].url.replace("https://api.github.com/repos/", "");
       title = '\n' + title.replace( /\/issues.*/g, "");
