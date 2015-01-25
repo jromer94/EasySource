@@ -1,6 +1,7 @@
 var request = require('request');
 var async = require('async');
 var prompt = require('prompt');
+var moment = require('moment');
 
 function getRepos(pageNum, language, callback) {
   var options = {
@@ -67,7 +68,9 @@ prompt.get(['language'], function (err, result) {
   async.each([1,2,3,4,5,6,7,8,9,10], function(i , callback) {
     getRepos(i, result.language, function(repos) {
       async.each(repos, function(repo, callback){
-        if(repo.open_issues_count > 0){
+        var updated = moment(repo.pushed_at);
+        var now = moment();
+        if(repo.open_issues_count > 0 && now.diff(updated, 'days') < 100){
           repoCount++;
           getIssues(repo, function(issues){
             async.each(issues, function(issue, callback){
